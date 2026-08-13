@@ -18,59 +18,73 @@
         .auth-form input{width:100%;padding:12px;margin-bottom:15px;border:2px solid #ddd;border-radius:10px;font-size:16px}
         .auth-form button{width:100%;padding:12px;background:#667eea;color:white;border:none;border-radius:10px;font-size:16px;cursor:pointer}
         .auth-switch{text-align:center;margin-top:15px;color:#666}
+        .auth-switch a{color:#667eea;text-decoration:none;font-weight:bold}
         .guest-mode{text-align:center;margin-top:20px}
         .guest-mode button{padding:10px 20px;background:#ddd;border:none;border-radius:10px;cursor:pointer;font-size:16px}
         #game-container{width:100%;height:100%;position:relative;display:none}
         #screens-container{display:flex;width:300%;height:100%;transition:transform .4s}
         .screen{width:33.333%;height:100%;position:relative;overflow:hidden}
         #shop-screen{background:linear-gradient(180deg,#3a2a1a,#5a3a2a)}
-        .screen-header{background:rgba(0,0,0,.8);padding:60px 15px 15px;display:flex;justify-content:space-between;color:white}
+        .screen-header{background:rgba(0,0,0,.8);padding:60px 15px 15px;display:flex;justify-content:space-between;align-items:center;color:white}
         .shop-content{height:calc(100% - 120px);overflow-y:auto;padding:15px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-        .shop-item{background:rgba(255,255,255,.1);border:2px solid rgba(255,215,0,.3);border-radius:12px;padding:15px;text-align:center;color:white;cursor:pointer}
+        .shop-item{background:rgba(255,255,255,.1);border:2px solid rgba(255,215,0,.3);border-radius:12px;padding:15px;text-align:center;color:white;cursor:pointer;transition:all .3s}
+        .shop-item:hover{border-color:#ffd700;background:rgba(255,255,255,.2)}
         .shop-item .seed-icon{font-size:48px;display:block;margin-bottom:10px}
-        .shop-item .seed-price{font-size:14px;color:#ffd700}
-        .rarity-common{background:#808080;padding:3px 8px;border-radius:10px;font-size:11px}
-        .rarity-uncommon{background:#00cc00;padding:3px 8px;border-radius:10px;font-size:11px}
-        .rarity-rare{background:#0066ff;padding:3px 8px;border-radius:10px;font-size:11px}
-        .rarity-epic{background:#9900ff;padding:3px 8px;border-radius:10px;font-size:11px}
-        .rarity-legendary{background:#ff6600;padding:3px 8px;border-radius:10px;font-size:11px}
+        .shop-item .seed-price{font-size:14px;color:#ffd700;margin-top:5px}
+        .shop-item .seed-name{font-weight:bold;margin:5px 0}
+        .shop-item .seed-info{font-size:12px;color:#ccc;margin:3px 0}
+        .rarity-common{background:#808080;padding:3px 8px;border-radius:10px;font-size:11px;display:inline-block}
+        .rarity-uncommon{background:#00cc00;padding:3px 8px;border-radius:10px;font-size:11px;display:inline-block}
+        .rarity-rare{background:#0066ff;padding:3px 8px;border-radius:10px;font-size:11px;display:inline-block}
+        .rarity-epic{background:#9900ff;padding:3px 8px;border-radius:10px;font-size:11px;display:inline-block}
+        .rarity-legendary{background:#ff6600;padding:3px 8px;border-radius:10px;font-size:11px;display:inline-block}
         #garden-screen{background:linear-gradient(180deg,#87ceeb,#7ec850 30%,#5a9e35)}
         #top-bar{position:absolute;top:0;left:0;width:100%;padding:50px 10px 10px;display:flex;gap:5px;z-index:10}
-        .stat-box{background:rgba(0,0,0,.6);padding:8px 12px;border-radius:20px;color:white;font-size:14px;font-weight:bold;display:flex;align-items:center;gap:5px}
-        #xp-bar-container{flex:1;background:rgba(0,0,0,.3);overflow:hidden;position:relative;height:34px;border-radius:20px}
-        #xp-bar{height:100%;background:linear-gradient(90deg,#4a9eff,#00ff00);transition:width .5s;border-radius:20px}
+        .stat-box{background:rgba(0,0,0,.6);padding:8px 12px;border-radius:20px;color:white;font-size:14px;font-weight:bold;display:flex;align-items:center;gap:5px;white-space:nowrap}
+        #xp-bar-container{flex:1;background:rgba(0,0,0,.3);overflow:hidden;position:relative;height:34px;border-radius:20px;min-width:50px}
+        #xp-bar{height:100%;background:linear-gradient(90deg,#4a9eff,#00ff00);transition:width .5s;border-radius:20px;width:0%}
         #garden-area{position:absolute;top:15%;left:0;width:100%;height:75%}
-        .soil-plot{position:absolute;width:80px;height:60px;background:radial-gradient(ellipse,#8b6914,#6b4f10);border-radius:50%;border:3px solid #5a3a0a;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+        .soil-plot{position:absolute;width:80px;height:60px;background:radial-gradient(ellipse,#8b6914,#6b4f10);border-radius:50%;border:3px solid #5a3a0a;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;transition:all .3s}
         .soil-plot.valid-drop{animation:pulse .5s infinite;border-color:#00ff00;box-shadow:0 0 20px #00ff00}
+        .soil-plot:hover{border-color:#ffd700}
         @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
         .plant-stage{font-size:40px;animation:idle 3s infinite}
         @keyframes idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
         .plant.ready .plant-stage{animation:ready 1s infinite;filter:drop-shadow(0 0 10px #ffd700)}
         @keyframes ready{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-        .nav-arrow{position:absolute;top:50%;width:40px;height:40px;background:rgba(0,0,0,.5);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:30px;cursor:pointer;z-index:20}
+        .plant-watering .plant-stage{animation:waterEffect 0.5s}
+        @keyframes waterEffect{0%{transform:rotate(0)}25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}100%{transform:rotate(0)}}
+        .nav-arrow{position:absolute;top:50%;width:40px;height:40px;background:rgba(0,0,0,.5);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:30px;cursor:pointer;z-index:20;transform:translateY(-50%)}
         .nav-arrow.left{left:5px}
         .nav-arrow.right{right:5px}
         #bottom-bar{position:absolute;bottom:0;left:0;width:100%;padding:10px;z-index:10}
         #seed-bar{background:rgba(0,0,0,.7);border-radius:25px;padding:10px;display:flex;gap:8px;overflow-x:auto;margin-bottom:8px}
-        .seed-item{min-width:70px;height:70px;background:rgba(255,255,255,.1);border:2px solid transparent;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;flex-shrink:0}
+        .seed-item{min-width:70px;height:70px;background:rgba(255,255,255,.1);border:2px solid transparent;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;flex-shrink:0;transition:all .3s}
         .seed-item.selected{border-color:#ffd700;background:rgba(255,215,0,.2)}
         .seed-item .icon{font-size:30px}
-        .seed-item .name{font-size:10px;color:white}
+        .seed-item .name{font-size:10px;color:white;text-align:center}
         .seed-item .quantity{position:absolute;top:2px;right:5px;font-size:10px;color:#ffd700;font-weight:bold}
-        #tool-bar{display:flex;gap:8px}
-        .tool-btn{flex:1;padding:10px;background:rgba(0,0,0,.7);border:2px solid transparent;border-radius:15px;color:white;font-size:12px;cursor:pointer;text-align:center}
+        #tool-bar{display:flex;gap:8px;flex-wrap:wrap}
+        .tool-btn{flex:1;padding:10px;background:rgba(0,0,0,.7);border:2px solid transparent;border-radius:15px;color:white;font-size:12px;cursor:pointer;text-align:center;min-width:60px}
         .tool-btn.active{border-color:#4a9eff;background:rgba(74,158,255,.3)}
         #inventory-screen{background:linear-gradient(180deg,#2a2a3a,#1a1a2a)}
         .inventory-content{height:calc(100% - 120px);overflow-y:auto;padding:15px;color:white}
+        .inventory-section{margin-bottom:20px}
+        .inventory-section h3{margin-bottom:10px;color:#ffd700}
+        .inventory-item{background:rgba(255,255,255,.1);padding:10px;border-radius:10px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
         #ghost-seed{position:fixed;font-size:40px;pointer-events:none;z-index:1000;opacity:.8;transform:translate(-50%,-50%);display:none}
-        #toast-container{position:fixed;top:15%;left:50%;transform:translateX(-50%);z-index:2000}
-        .toast{background:rgba(0,0,0,.8);color:white;padding:10px 20px;border-radius:20px;margin-bottom:10px;animation:fadeIn .3s}
+        #toast-container{position:fixed;top:15%;left:50%;transform:translateX(-50%);z-index:2000;width:90%;max-width:400px}
+        .toast{background:rgba(0,0,0,.8);color:white;padding:10px 20px;border-radius:20px;margin-bottom:10px;animation:fadeIn .3s;text-align:center}
         @keyframes fadeIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
         #modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:3000;display:none;align-items:center;justify-content:center}
         #modal-content{background:white;border-radius:20px;padding:20px;max-width:90%;max-height:80%;overflow-y:auto}
         .particle{position:absolute;pointer-events:none;z-index:100;animation:fly 1s forwards}
         @keyframes fly{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
-        #logout-btn{position:absolute;top:10px;right:10px;z-index:100;background:rgba(255,0,0,.7);color:white;border:none;border-radius:20px;padding:8px 15px;cursor:pointer}
+        #logout-btn{position:absolute;top:10px;right:10px;z-index:100;background:rgba(255,0,0,.7);color:white;border:none;border-radius:20px;padding:8px 15px;cursor:pointer;font-size:14px}
+        .quest-item{background:rgba(255,255,255,.1);padding:15px;border-radius:10px;margin-bottom:10px;cursor:pointer}
+        .quest-item.completed{background:rgba(0,255,0,.2);border:2px solid #00ff00}
+        .quest-progress{height:10px;background:rgba(0,0,0,.3);border-radius:5px;margin-top:5px;overflow:hidden}
+        .quest-progress-bar{height:100%;background:#00ff00;transition:width .3s}
     </style>
 </head>
 <body>
@@ -81,6 +95,7 @@
             <p>Loading...</p>
         </div>
     </div>
+    
     <div id="auth-screen">
         <div class="auth-container">
             <h1 style="text-align:center;margin-bottom:20px;">🌱 Garden Grow</h1>
@@ -105,6 +120,7 @@
             </div>
         </div>
     </div>
+    
     <div id="game-container">
         <div id="screens-container">
             <div id="shop-screen" class="screen">
@@ -114,6 +130,7 @@
                 </div>
                 <div class="shop-content" id="shop-items"></div>
             </div>
+            
             <div id="garden-screen" class="screen">
                 <div id="top-bar">
                     <div class="stat-box">💎 <span id="currency-display">0</span></div>
@@ -136,6 +153,7 @@
                     </div>
                 </div>
             </div>
+            
             <div id="inventory-screen" class="screen">
                 <div class="screen-header">
                     <h2>🎒 Inventory</h2>
@@ -148,6 +166,7 @@
         <div id="ghost-seed"></div>
         <div id="toast-container"></div>
     </div>
+
 <script>
     const SUPABASE_CONFIG = {
         PROJECT_URL: 'https://dhvukkpqwyzayeosnzsg.supabase.co',
@@ -158,6 +177,9 @@
     let currentUser = null;
     let isGuest = false;
     let gameLoopInterval = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isSwiping = false;
     
     const seedData = {
         carrot: { name: 'Carrot', emoji: '🥕', stages: ['🌰', '🌱', '🌿', '🥕', '✨🥕'], growthTime: 30000, price: 10, sellValue: 20, rarity: 'common', waterNeeds: 2, xpReward: 5 },
@@ -173,28 +195,146 @@
     const questData = [
         { id: 'plant3', description: 'Plant 3 seeds', target: 3, progress: 0, reward: 50, type: 'plant' },
         { id: 'harvest5', description: 'Harvest 5 crops', target: 5, progress: 0, reward: 100, type: 'harvest' },
-        { id: 'earn100', description: 'Earn 100 Sh', target: 100, progress: 0, reward: 30, type: 'earn' },
+        { id: 'earn100', description: 'Earn 100 Shards', target: 100, progress: 0, reward: 30, type: 'earn' },
         { id: 'water5', description: 'Water plants 5 times', target: 5, progress: 0, reward: 40, type: 'water' }
     ];
     
     const gameState = {
-        currency: 500, farmLevel: 1, farmXP: 0, xpToNext: 100,
-        waterCapacity: 10, currentWater: 10, selectedSeed: null,
-        selectedTool: 'plant', currentScreen: 1, plants: [],
-        inventory: { seeds: { carrot: 5, tomato: 3 }, crops: {}, gear: {} },
-        quests: JSON.parse(JSON.stringify(questData)), plots: [],
-        stats: { totalEarned: 0, totalPlanted: 0, totalHarvested: 0, totalWatered: 0, questsCompleted: 0 }
+        currency: 500,
+        farmLevel: 1,
+        farmXP: 0,
+        xpToNext: 100,
+        waterCapacity: 10,
+        currentWater: 10,
+        selectedSeed: null,
+        selectedTool: 'plant',
+        currentScreen: 1,
+        plants: [],
+        inventory: { 
+            seeds: { carrot: 5, tomato: 3 }, 
+            crops: {}, 
+            gear: {} 
+        },
+        quests: JSON.parse(JSON.stringify(questData)),
+        plots: [],
+        stats: { 
+            totalEarned: 0, 
+            totalPlanted: 0, 
+            totalHarvested: 0, 
+            totalWatered: 0, 
+            questsCompleted: 0 
+        }
     };
     
-    let touchStartX = 0, touchStartY = 0, isSwiping = false;
+    // Initialize Supabase
+    function initSupabase() {
+        try {
+            supabaseClient = supabase.createClient(
+                SUPABASE_CONFIG.PROJECT_URL,
+                SUPABASE_CONFIG.PUBLIC_ANON_KEY
+            );
+            return true;
+        } catch (error) {
+            console.error('Failed to initialize Supabase:', error);
+            return false;
+        }
+    }
     
-    function showToast(msg) {
+    // Show toast notification
+    function showToast(message) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = 'toast';
-        toast.textContent = msg;
+        toast.textContent = message;
         container.appendChild(toast);
-        setTimeout(() => toast.remove(), 2300);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s';
+            setTimeout(() => toast.remove(), 500);
+        }, 2300);
+    }
+    
+    // Authentication handlers
+    async function handleSignup() {
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        
+        if (!email || !password) {
+            showToast('Please fill in all fields');
+            return;
+        }
+        
+        if (password.length < 6) {
+            showToast('Password must be at least 6 characters');
+            return;
+        }
+        
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password
+            });
+            
+            if (error) throw error;
+            
+            if (data.user) {
+                showToast('Account created! Please check your email to verify.');
+                showLogin();
+            }
+        } catch (error) {
+            showToast('Signup failed: ' + error.message);
+        }
+    }
+    
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+        
+        if (!email || !password) {
+            showToast('Please fill in all fields');
+            return;
+        }
+        
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+            
+            if (error) throw error;
+            
+            currentUser = data.user;
+            isGuest = false;
+            showToast('Welcome back!');
+            showGameScreen();
+            await loadGame();
+            setupGame();
+        } catch (error) {
+            showToast('Login failed: ' + error.message);
+        }
+    }
+    
+    async function handleLogout() {
+        if (isGuest) {
+            if (confirm('Your progress will be lost. Continue?')) {
+                resetGame();
+                showAuthScreen();
+            }
+        } else {
+            await saveGame();
+            await supabaseClient.auth.signOut();
+            currentUser = null;
+            resetGame();
+            showAuthScreen();
+        }
+    }
+    
+    function playAsGuest() {
+        isGuest = true;
+        currentUser = null;
+        showToast('Playing as guest - progress won\'t be saved');
+        showGameScreen();
+        setupGame();
     }
     
     function showAuthScreen() {
@@ -203,125 +343,4 @@
         document.getElementById('loading-screen').style.display = 'none';
     }
     
-    function showGameScreen() {
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('game-container').style.display = 'block';
-        document.getElementById('loading-screen').style.display = 'none';
-    }
-    
-    function showLogin() {
-        document.getElementById('login-form').style.display = 'block';
-        document.getElementById('signup-form').style.display = 'none';
-    }
-    
-    function showSignup() {
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('signup-form').style.display = 'block';
-    }
-    
-    function playAsGuest() {
-        isGuest = true;
-        currentUser = null;
-        showToast('Playing as guest');
-        showGameScreen();
-        setupGame();
-    }
-    
-    function createGardenPlots() {
-        const gardenArea = document.getElementById('garden-area');
-        gardenArea.innerHTML = '';
-        gameState.plots = [];
-        const areaWidth = gardenArea.clientWidth || window.innerWidth;
-        const areaHeight = gardenArea.clientHeight || (window.innerHeight * 0.7);
-        const hSpacing = areaWidth / 4;
-        const vSpacing = areaHeight / 4;
-        
-        for (let i = 0; i < 9; i++) {
-            const row = Math.floor(i / 3);
-            const col = i % 3;
-            const x = (col + 1) * hSpacing - 40;
-            const y = (row + 1) * vSpacing - 30;
-            const plot = document.createElement('div');
-            plot.className = 'soil-plot';
-            plot.id = 'plot-' + i;
-            plot.style.left = x + 'px';
-            plot.style.top = y + 'px';
-            const plotData = { id: i, element: plot, plant: null, x: x, y: y };
-            gameState.plots.push(plotData);
-            gardenArea.appendChild(plot);
-            plot.onclick = function() { handlePlotClick(i); };
-        }
-    }
-    
-    function plantSeed(plotIndex) {
-        const seedKey = gameState.selectedSeed;
-        if (!seedKey) { showToast('Select a seed first!'); return; }
-        if (!gameState.inventory.seeds[seedKey] || gameState.inventory.seeds[seedKey] <= 0) { showToast('No seeds!'); return; }
-        if (gameState.plots[plotIndex].plant) { showToast('Plot occupied!'); return; }
-        
-        gameState.inventory.seeds[seedKey]--;
-        const plant = {
-            id: Date.now(), seedKey: seedKey, plotIndex: plotIndex,
-            plantedAt: Date.now(), lastWateredAt: Date.now(),
-            waterLevel: seedData[seedKey].waterNeeds, growthStage: 0, ready: false
-        };
-        gameState.plants.push(plant);
-        gameState.plots[plotIndex].plant = plant;
-        gameState.stats.totalPlanted++;
-        updatePlotVisual(plotIndex);
-        updateUI();
-        showToast('Planted ' + seedData[seedKey].name + '!');
-        saveGame();
-    }
-    
-    function waterPlant(plotIndex) {
-        const plot = gameState.plots[plotIndex];
-        if (!plot.plant || gameState.currentWater <= 0) return;
-        plot.plant.waterLevel = seedData[plot.plant.seedKey].waterNeeds;
-        plot.plant.lastWateredAt = Date.now();
-        gameState.currentWater--;
-        gameState.stats.totalWatered++;
-        updatePlotVisual(plotIndex);
-        updateUI();
-        showToast('Watered!');
-        saveGame();
-    }
-    
-    function harvestPlant(plotIndex) {
-        const plot = gameState.plots[plotIndex];
-        if (!plot.plant || !plot.plant.ready) return;
-        const plant = plot.plant;
-        const seed = seedData[plant.seedKey];
-        if (!gameState.inventory.crops[plant.seedKey]) gameState.inventory.crops[plant.seedKey] = 0;
-        gameState.inventory.crops[plant.seedKey]++;
-        const earnings = seed.sellValue;
-        gameState.currency += earnings;
-        gameState.stats.totalEarned += earnings;
-        gameState.stats.totalHarvested++;
-        gameState.farmXP += seed.xpReward;
-        if (gameState.farmXP >= gameState.xpToNext) {
-            gameState.farmLevel++;
-            gameState.farmXP -= gameState.xpToNext;
-            gameState.xpToNext = Math.floor(gameState.xpToNext * 1.5);
-            gameState.waterCapacity += 2;
-            gameState.currentWater = gameState.waterCapacity;
-        }
-        plot.plant = null;
-        gameState.plants = gameState.plants.filter(p => p.id !== plant.id);
-        showToast('+1 ' + seed.name + ' (+' + earnings + ' Sh)');
-        updatePlotVisual(plotIndex);
-        updateUI();
-        saveGame();
-    }
-    
-    function calculateGrowthStage(plant) {
-        const seed = seedData[plant.seedKey];
-        const progress = (Date.now() - plant.plantedAt) / seed.growthTime;
-        if (progress >= 1) return 4;
-        if (progress >= 0.75) return 3;
-        if (progress >= 0.5) return 2;
-        if (progress >= 0.25) return 1;
-        return 0;
-    }
-    
-    function updatePlantGrowth()
+    f
