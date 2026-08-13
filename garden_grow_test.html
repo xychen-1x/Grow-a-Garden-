@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Garden Grow - Test Build</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;user-select:none}
+body{font-family:Arial,sans-serif;overflow:hidden;height:100vh;background:#000}
+#app{height:100%;display:flex;flex-direction:column;background:linear-gradient(#87ceeb 0 30%,#7ec850 30%);color:white}
+#top{padding:16px 10px 8px;display:flex;gap:6px;flex-wrap:wrap;background:#0008}
+.stat{background:#0009;border-radius:18px;padding:8px 12px;font-weight:bold}
+#garden{position:relative;flex:1}
+.plot{position:absolute;width:82px;height:62px;border-radius:50%;background:#76520f;border:3px solid #503708;display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer}
+#tools{background:#000b;padding:8px;display:flex;gap:6px;overflow:auto}
+button{border:0;border-radius:12px;padding:10px 12px;font-weight:bold;cursor:pointer}
+.tool{background:#333;color:white;border:2px solid transparent}.tool.active{border-color:#ffd700}
+#seedbar{display:flex;gap:6px;overflow:auto;background:#000b;padding:8px}
+.seed{min-width:62px;background:#ffffff22;color:white}.seed.selected{outline:2px solid #ffd700}
+#toast{position:fixed;top:20%;left:50%;transform:translateX(-50%);background:#000d;color:white;padding:12px 18px;border-radius:20px;display:none}
+h2{margin:4px 0}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top">
+    <div class="stat">💎 <span id="coins">500</span></div>
+    <div class="stat">⭐ Lv.<span id="level">1</span></div>
+    <div class="stat">💧 <span id="water">10</span>/10</div>
+    <div class="stat">🌱 Garden Grow TEST</div>
+  </div>
+  <div id="garden"></div>
+  <div id="seedbar"></div>
+  <div id="tools">
+    <button class="tool active" onclick="setTool('plant',this)">🌱 Plant</button>
+    <button class="tool" onclick="setTool('water',this)">💧 Water</button>
+    <button class="tool" onclick="setTool('harvest',this)">🎒 Harvest</button>
+    <button class="tool" onclick="resetGame()">↻ Reset</button>
+  </div>
+</div>
+<div id="toast"></div>
+<script>
+const seeds={
+ carrot:{name:'Carrot',emoji:'🥕',price:10,time:3000,sell:20},
+ tomato:{name:'Tomato',emoji:'🍅',price:20,time:4500,sell:40},
+ blueberry:{name:'Blueberry',emoji:'🫐',price:30,time:6000,sell:60},
+ moonflower:{name:'Moonflower',emoji:'🌙',price:50,time:9000,sell:100},
+ dragonfruit:{name:'Dragon Fruit',emoji:'🐉',price:80,time:12000,sell:160}
+};
+let state={coins:500,water:10,tool:'plant',selected:'carrot',plots:[]};
+
+const garden=document.getElementById('garden'), seedbar=document.getElementById('seedbar');
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',1600)}
+function renderSeeds(){
+ seedbar.innerHTML='';
+ Object.entries(seeds).forEach(([id,s])=>{
+  let b=document.createElement('button');b.className='seed '+(state.selected===id?'selected':'');
+  b.textContent=s.emoji+' '+s.name;
+  b.onclick=()=>{state.selected=id;renderSeeds()};
+  seedbar.appendChild(b);
+ });
+}
+function setTool(tool,el){
+ state.tool=tool;
+ document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));
+ el.classList.add('active');
+}
+function render(){
+ document.getElementById('coins').textContent=state.coins;
+ document.getElementById('water').textContent=state.water;
+ garden.innerHTML='';
+ state.plots.forEach((p,i)=>{
+  let el=document.createElement('div');el.className='plot';
+  el.style.left=p.x+'%';el.style.top=p.y+'%';
+  el.textContent=p.ready?'✨'+p.emoji:p.emoji;
+  el.onclick=()=>usePlot(i);
+  garden.appendChild(el);
+ });
+ renderSeeds();
+}
+function usePlot(i){
+ let p=state.plots[i],s=seeds[p.type];
+ if(state.tool==='plant'){toast('This plot already has a plant');return}
+ if(state.tool==='water'){
+  if(state.water<=0){toast('No water left');return}
+  if(p.ready){toast('Already ready to harvest');return}
+  state.water--;p.watered=true;toast('💧 Plant watered!');
+ }
+ if(state.tool==='harvest'){
+  if(!p.ready){toast('🌱 Not ready yet');return}
+  state.coins+=s.sell;state.plots.splice(i,1);toast('🎉 Harvested +'+s.sell+' diamonds!');
+ }
+ render();
+}
+function plantAt(x,y){
+ let s=seeds[state.selected];
+ if(state.coins<s.price){toast('Not enough diamonds');return}
+ state.coins-=s.price;
+ let p={type:state.selected,emoji:s.emoji,x,y,ready:false};
+ state.plots.push(p);render();toast('🌱 '+s.name+' planted!');
+ setTimeout(()=>{p.ready=true;render();toast('✨ '+s.name+' is ready!')},s.time);
+}
+garden.addEventListener('click',e=>{
+ if(state.tool!=='plant')return;
+ if(e.target!==garden)return;
+ let r=garden.getBoundingClientRect();
+ let x=Math.max(3,Math.min(88,(e.clientX-r.left)/r.width*100-5));
+ let y=Math.max(5,Math.min(78,(e.clientY-r.top)/r.height*100-5));
+ plantAt(x,y);
+});
+function resetGame(){
+ if(confirm('Reset your test garden?')){
+  state={coins:500,water:10,tool:'plant',selected:'carrot',plots:[]};render();toast('Test garden reset');
+ }
+}
+render();
+</script>
+</body>
+</html>
