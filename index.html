@@ -346,5 +346,191 @@
         document.getElementById('game-container').style.display = 'none';
         document.getElementById('loading-screen').style.display = 'none';
     }
+    function updatePlantGrowth() {
+    // Update all plants
+    gameState.plots.forEach((plot, index) => {
+        if (plot.plant) {
+            updatePlotVisual(index);
+        }
+    });
+}
+
+// Quick fix functions
+function showAuthScreen() {
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('game-container').style.display = 'none';
+    document.getElementById('loading-screen').style.display = 'none';
+}
+
+function showGameScreen() {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('game-container').style.display = 'block';
+    document.getElementById('loading-screen').style.display = 'none';
+}
+
+function playAsGuest() {
+    isGuest = true;
+    currentUser = null;
+    showToast('Playing as guest');
+    showGameScreen();
+    setupGame();
+}
+
+function showToast(msg) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 2300);
+}
+
+function setupGame() {
+    createGardenPlots();
+    updateShop();
+    updateSeedBar();
+    updateUI();
+    startGameLoop();
+}
+
+function createGardenPlots() {
+    const gardenArea = document.getElementById('garden-area');
+    gardenArea.innerHTML = '';
+    gameState.plots = [];
+    const areaWidth = gardenArea.clientWidth || window.innerWidth;
+    const areaHeight = gardenArea.clientHeight || (window.innerHeight * 0.7);
+    const hSpacing = areaWidth / 4;
+    const vSpacing = areaHeight / 4;
     
-    f
+    for (let i = 0; i < 9; i++) {
+        const row = Math.floor(i / 3);
+        const col = i % 3;
+        const x = (col + 1) * hSpacing - 40;
+        const y = (row + 1) * vSpacing - 30;
+        const plot = document.createElement('div');
+        plot.className = 'soil-plot';
+        plot.id = 'plot-' + i;
+        plot.style.left = x + 'px';
+        plot.style.top = y + 'px';
+        const plotData = { id: i, element: plot, plant: null, x: x, y: y };
+        gameState.plots.push(plotData);
+        gardenArea.appendChild(plot);
+        plot.onclick = function() { handlePlotClick(i); };
+    }
+}
+
+function updateUI() {
+    document.getElementById('currency-display').textContent = gameState.currency;
+    document.getElementById('shop-currency').textContent = gameState.currency;
+    document.getElementById('level-display').textContent = gameState.farmLevel;
+    document.getElementById('water-display').textContent = gameState.currentWater + '/' + gameState.waterCapacity;
+    const xpPercent = (gameState.farmXP / gameState.xpToNext) * 100;
+    document.getElementById('xp-bar').style.width = xpPercent + '%';
+    updateSeedBar();
+    updateShop();
+}
+
+function updateSeedBar() {
+    const seedBar = document.getElementById('seed-bar');
+    seedBar.innerHTML = '';
+    for (const [key, seed] of Object.entries(seedData)) {
+        const quantity = gameState.inventory.seeds[key] || 0;
+        if (quantity > 0) {
+            const seedItem = document.createElement('div');
+            seedItem.className = 'seed-item';
+            if (gameState.selectedSeed === key) seedItem.classList.add('selected');
+            seedItem.innerHTML = `<span class="quantity">${quantity}</span><span class="icon">${seed.emoji}</span><span class="name">${seed.name}</span>`;
+            seedItem.onclick = function() { gameState.selectedSeed = key; updateSeedBar(); };
+            seedBar.appendChild(seedItem);
+        }
+    }
+}
+
+function updateShop() {
+    const shopContent = document.getElementById('shop-items');
+    shopContent.innerHTML = '';
+    for (const [key, seed] of Object.entries(seedData)) {
+        const shopItem = document.createElement('div');
+        shopItem.className = 'shop-item';
+        shopItem.innerHTML = `<span class="seed-icon">${seed.emoji}</span><div>${seed.name}</div><div class="seed-price">${seed.price} 💎</div>`;
+        shopItem.onclick = function() { buySeed(key); };
+        shopContent.appendChild(shopItem);
+    }
+}
+
+function buySeed(seedKey) {
+    const seed = seedData[seedKey];
+    if (gameState.currency < seed.price) {
+        showToast('Not enough currency!');
+        return;
+    }
+    gameState.currency -= seed.price;
+    if (!gameState.inventory.seeds[seedKey]) gameState.inventory.seeds[seedKey] = 0;
+    gameState.inventory.seeds[seedKey]++;
+    updateUI();
+    showToast('Bought ' + seed.name + ' seed!');
+}
+
+function selectTool(tool) {
+    gameState.selectedTool = tool;
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+        if (btn.dataset.tool === tool) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+}
+
+function handlePlotClick(plotIndex) {
+    const plot = gameState.plots[plotIndex];
+    if (gameState.selectedTool === 'plant') {
+        plantSeed(plotIndex);
+    } else if (gameState.selectedTool === 'water') {
+        waterPlant(plotIndex);
+    } else if (gameState.selectedTool === 'harvest') {
+        harvestPlant(plotIndex);
+    }
+}
+
+function switchScreen(direction) {
+    gameState.currentScreen += direction;
+    if (gameState.currentScreen < 0) gameState.currentScreen = 0;
+    if (gameState.currentScreen > 2) gameState.currentScreen = 2;
+    const container = document.getElementById('screens-container');
+    container.style.transform = 'translateX(-' + (gameState.currentScreen * 33.333) + '%)';
+}
+
+function startGameLoop() {
+    setInterval(() => {
+        gameState.plots.forEach((plot, index) => {
+            if (plot.plant) updatePlotVisual(index);
+        });
+        if (gameState.currentWater < gameState.waterCapacity) {
+            gameState.currentWater++;
+            document.getElementById('water-display').textContent = gameState.currentWater + '/' + gameState.waterCapacity;
+        }
+    }, 30000);
+}
+
+function updatePlotVisual(plotIndex) {
+    const plot = gameState.plots[plotIndex];
+    const plotElement = plot.element;
+    const existingPlant = plotElement.querySelector('.plant-stage');
+    if (existingPlant) existingPlant.remove();
+    
+    if (plot.plant) {
+        const plant = plot.plant;
+        const seed = seedData[plant.seedKey];
+        plant.growthStage = calculateGrowthStage(plant);
+        plant.ready = plant.growthStage >= 4;
+        
+        const plantStage = document.createElement('div');
+        plantStage.className = 'plant-stage';
+        if (plant.ready) plantStage.textContent = seed.stages[4];
+        else plantStage.textContent = seed.stages[plant.growthStage];
+        plotElement.appendChild(plantStage);
+    }
+}
+
+// Start agad para hindi ma-stuck sa loading
+setTimeout(() => {
+    showAuthScreen();
+}, 1000);
